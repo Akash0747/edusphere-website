@@ -1,0 +1,55 @@
+{
+  "2025": {
+    "Physics": "https://www.cbse.gov.in/cbsenew/question-paper/2025/XII/PHYSICS.zip",
+    "Chemistry": "https://www.cbse.gov.in/cbsenew/question-paper/2025/XII/CHEMISTRY.zip",
+    "Mathematics": "https://www.cbse.gov.in/cbsenew/question-paper/2025/XII/MATHEMATICS.zip",
+    "Biology": "https://www.cbse.gov.in/cbsenew/question-paper/2025/XII/BIOLOGY.zip",
+    "English Core": "https://www.cbse.gov.in/cbsenew/question-paper/2025/XII/ENGLISH_CORE.zip",
+    "Economics": "https://www.cbse.gov.in/cbsenew/question-paper/2025/XII/ECONOMICS.zip",
+    "Accountancy": "https://www.cbse.gov.in/cbsenew/question-paper/2025/XII/ACCOUNTANCY.zip",
+    "Computer Science": "https://www.cbse.gov.in/cbsenew/question-paper/2025/XII/91_COMPUTER_SCIENCE.pdf",
+    "Applied Mathematics": "https://www.cbse.gov.in/cbsenew/question-paper/2025/XII/465_Applied_Mathematics.pdf",
+    "Business Studies": "https://www.cbse.gov.in/cbsenew/question-paper/2025/XII/BUSINESS_STUDIES.zip",
+    "History": "https://www.cbse.gov.in/cbsenew/question-paper/2025/XII/HISTORY.zip",
+    "Psychology": "https://www.cbse.gov.in/cbsenew/question-paper/2025/XII/63_psychology.pdf"
+  },
+  "2024": {
+    "Physics": "https://www.cbse.gov.in/cbsenew/question-paper/2024/XII/PHYSICS.zip",
+    "Chemistry": "https://www.cbse.gov.in/cbsenew/question-paper/2024/XII/CHEMISTRY.zip",
+    "Mathematics": "https://www.cbse.gov.in/cbsenew/question-paper/2024/XII/MATHEMATICS.zip",
+    "Biology": "https://www.cbse.gov.in/cbsenew/question-paper/2024/XII/BIOLOGY.zip",
+    "English Core": "https://www.cbse.gov.in/cbsenew/question-paper/2024/XII/ENGLISH_CORE.zip",
+    "Economics": "https://www.cbse.gov.in/cbsenew/question-paper/2024/XII/ECONOMICS.zip",
+    "Accountancy": "https://www.cbse.gov.in/cbsenew/question-paper/2024/XII/ACCOUNTANCY.zip",
+    "Computer Science": "https://www.cbse.gov.in/cbsenew/question-paper/2024/XII/Computer_Science.zip",
+    "Applied Mathematics": "https://www.cbse.gov.in/cbsenew/question-paper/2024/XII/Applied_Mathematics.zip",
+    "Business Studies": "https://www.cbse.gov.in/cbsenew/question-paper/2024/XII/BUSINESS_STUDIES.zip",
+    "History": "https://www.cbse.gov.in/cbsenew/question-paper/2024/XII/HISTORY.zip",
+    "Psychology": "https://www.cbse.gov.in/cbsenew/question-paper/2024/XII/Psychology.zip"
+  },
+  "2023": {
+    "Physics": "https://www.cbse.gov.in/cbsenew/question-paper/2023/XII/PHYSICS.zip",
+    "Chemistry": "https://www.cbse.gov.in/cbsenew/question-paper/2023/XII/CHEMISTRY.zip",
+    "Mathematics": "https://www.cbse.gov.in/cbsenew/question-paper/2023/XII/MATHEMATICS.zip",
+    "Biology": "https://www.cbse.gov.in/cbsenew/question-paper/2023/XII/BIOLOGY.zip",
+    "English Core": "https://www.cbse.gov.in/cbsenew/question-paper/2023/XII/ENGLISH_CORE.zip",
+    "Economics": "https://www.cbse.gov.in/cbsenew/question-paper/2023/XII/ECONOMICS.zip",
+    "Accountancy": "https://www.cbse.gov.in/cbsenew/question-paper/2023/XII/ACCOUNTANCY.zip",
+    "Computer Science": "https://www.cbse.gov.in/cbsenew/question-paper/2023/XII/91_Computer_Science.zip",
+    "Applied Mathematics": "https://www.cbse.gov.in/cbsenew/question-paper/2023/XII/465_APPLIED_MATHEMATICS.zip",
+    "Business Studies": "https://www.cbse.gov.in/cbsenew/question-paper/2023/XII/BUSINESS_STUDIES.zip",
+    "History": "https://www.cbse.gov.in/cbsenew/question-paper/2023/XII/HISTORY.zip",
+    "Psychology": "https://www.cbse.gov.in/cbsenew/question-paper/2023/XII/63_Psychology.zip"
+  },
+  "2022": {
+    "Physics": "https://www.cbse.gov.in/cbsenew/question-paper/2022/XII/Physics.zip",
+    "Chemistry": "https://www.cbse.gov.in/cbsenew/question-paper/2022/XII/Chemistry.zip",
+    "Biology": "https://www.cbse.gov.in/cbsenew/question-paper/2022/XII/Biology.zip",
+    "Economics": "https://www.cbse.gov.in/cbsenew/question-paper/2022/XII/Economics.zip",
+    "Accountancy": "https://www.cbse.gov.in/cbsenew/question-paper/2022/XII/Accountancy.zip",
+    "Computer Science": "https://www.cbse.gov.in/cbsenew/question-paper/2022/XII/Computer_Science.zip",
+    "Applied Mathematics": "https://www.cbse.gov.in/cbsenew/question-paper/2022/XII/Applied_Mathematics.zip",
+    "History": "https://www.cbse.gov.in/cbsenew/question-paper/2022/XII/History.zip",
+    "Psychology": "https://www.cbse.gov.in/cbsenew/question-paper/2022/XII/Psychology.zip"
+  }
+}
