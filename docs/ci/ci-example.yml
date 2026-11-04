@@ -1,0 +1,49 @@
+name: EduSphere CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  validate-frontend:
+    name: Rebuild & validate the static site
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Rebuild index.html from src/
+        working-directory: frontend
+        run: python3 build.py
+
+      - name: Check the built page
+        run: |
+          test -s frontend/index.html
+          grep -q '__ARCHIVE__' frontend/index.html
+          grep -q 'EduSphere' frontend/index.html
+          echo "Built size: $(wc -c < frontend/index.html) bytes"
+          echo "Papers: $(python3 -c "import json;print(len(json.load(open('frontend/src/data/archive.json'))['papers']))")"
+
+      - name: Verify the build is reproducible
+        run: |
+          cp frontend/index.html /tmp/rebuilt.html
+          cd frontend && python3 build.py
+          cmp /tmp/rebuilt.html index.html && echo "Reproducible build ✓"
+
+      - name: Python syntax check (backend + scripts)
+        run: |
+          python3 -m compileall -q backend frontend
+          echo "All Python files compile ✓"
+
+      - name: Upload the built site as an artefact
+        uses: actions/upload-artifact@v4
+        with:
+          name: edusphere-frontend
+          path: frontend/index.html

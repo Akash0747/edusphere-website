@@ -1,0 +1,44 @@
+# ── Python ────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# ── Node / tooling ────────────────────────────────────────────────────────
+node_modules/
+npm-debug.log*
+.npm/
+.playwright-cli/
+
+# ── Environment & secrets (NEVER commit these) ────────────────────────────
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credentials.json
+service-account.json
+
+# ── Local databases & uploads ─────────────────────────────────────────────
+*.db
+*.sqlite
+*.sqlite3
+data/
+uploads/
+pdfs/
+
+# ── Editors / OS ──────────────────────────────────────────────────────────
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.swp
+
+# ── Build artefacts that should NOT be ignored ────────────────────────────
+# frontend/index.html is a deliberate, self-contained deliverable: keep it.

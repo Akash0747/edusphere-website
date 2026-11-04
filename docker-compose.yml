@@ -1,0 +1,31 @@
+# Local PostgreSQL for developing the EduSphere backend.
+# The FRONTEND needs none of this — it is a single static HTML file.
+#
+#   docker compose up -d db
+#   export DATABASE_URL=postgresql://edusphere:edusphere@localhost:5432/edusphere
+#   psql "$DATABASE_URL" -f database/schema.postgres.sql
+#   psql "$DATABASE_URL" -f database/seed_data.postgres.sql
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: edusphere-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: edusphere
+      POSTGRES_PASSWORD: edusphere
+      POSTGRES_DB: edusphere
+    ports:
+      - "5432:5432"
+    volumes:
+      - edusphere_pgdata:/var/lib/postgresql/data
+      # SQL files are mounted read-only; run them manually with psql.
+      - ./database:/sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U edusphere -d edusphere"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  edusphere_pgdata:

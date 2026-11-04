@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>EduSphere — The Paper Archive</title>
+<meta name="description" content="A question-paper archive for ISC Class 12, CBSE Class 12, JEE Main, JEE Advanced and NEET UG — previous year papers, specimen papers and practice questions.">
+<style>
+{{HEADSTYLE}}
+</style>
+</head>
+<body>
+
+<svg class="svg-defs" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+  <filter id="rough"><feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves="3" result="noise"/><feDisplacementMap in="SourceGraphic" in2="noise" scale="4"/></filter>
+</svg>
+
+<div class="paper-bg" aria-hidden="true">
+  <div class="sheet sheet--kraft"></div>
+  <div class="sheet sheet--blue"></div>
+  <div class="sheet sheet--cream"></div>
+  <div class="sheet sheet--warm"></div>
+  <div class="grain"></div>
+</div>
+
+<header class="topbar" id="topbar">
+  <a class="brand" href="#home" aria-label="EduSphere home">
+    <span class="brand__mark">E</span>
+    <span class="brand__text"><b>EDUSPHERE</b><small>THE PAPER ARCHIVE</small></span>
+  </a>
+  <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-label="Toggle navigation">MENU ☰</button>
+  <nav class="nav" id="nav" aria-label="Main navigation">
+    <a class="nav__link" href="#home" data-nav="home">Home</a>
+    <a class="nav__link" href="#exams" data-nav="exams">Exams</a>
+    <a class="nav__link" href="#papers" data-nav="papers">Papers <span class="count" id="navCount"></span></a>
+    <a class="nav__link" href="#practice" data-nav="practice">Practice</a>
+    <a class="nav__link" href="#dashboard" data-nav="dashboard">My desk</a>
+    <a class="nav__link" href="#connect" data-nav="connect">Database</a>
+  </nav>
+</header>
+
+<main>
+
+  <!-- ============ HOME ============ -->
+  <section class="view" id="view-home" data-view="home">
+    <div class="hero">
+      <div class="hero__stage">
+        <div class="hero__sheet hero__sheet--a"></div>
+        <div class="hero__sheet hero__sheet--b"></div>
+        <div class="hero__sheet hero__sheet--c"></div>
+
+        <figure class="torn torn--cinema">
+          <div class="torn__back"></div>
+          <div class="torn__photo"></div>
+        </figure>
+        <figure class="torn torn--street">
+          <div class="torn__back"></div>
+          <div class="torn__photo"></div>
+        </figure>
+
+        <div class="hero__type">
+          <p class="eyebrow eyebrow--light">Est. 2026 &nbsp;·&nbsp; Edusphere &nbsp;·&nbsp; Question Paper Archive</p>
+          <h1 class="display"><span>The Paper</span><span class="display__indent">Archive</span></h1>
+          <p class="hero__sub">A neighbourhood archive of previous year question papers. Five exams, one shelf — find the paper, know the pattern.</p>
+          <div class="hero__actions">
+            <a class="btn btn--amber" href="#papers">Browse the collection <span aria-hidden="true">→</span></a>
+            <a class="btn btn--light" href="#exams">Choose an exam</a>
+          </div>
+        </div>
+
+        <aside class="hero__note">
+          <span class="stamp">FILED<br>&amp; KEPT</span>
+          <b id="heroCount">—</b>
+          papers in the archive
+        </aside>
+      </div>
+    </div>
+
+    <div class="ticker">
+      <div class="ticker__inner wrap" id="ticker"></div>
+    </div>
+
+    <div class="wrap section">
+      <div class="section__head">
+        <div>
+          <p class="eyebrow">01 / Pick your aisle</p>
+          <h2 class="section__title">Choose an exam</h2>
+          <p class="section__sub">Every shelf is filed by examination, year and subject. Tap a card to open its papers.</p>
+        </div>
+        <a class="btn btn--outline" href="#exams">All exam shelves →</a>
+      </div>
+      <div class="exam-grid" id="homeExams"></div>
+    </div>
+
+    <div class="wrap section">
+      <div class="section__head">
+        <div>
+          <p class="eyebrow">02 / Fresh off the press</p>
+          <h2 class="section__title">Recent files</h2>
+        </div>
+        <a class="btn btn--outline" href="#papers">See every paper →</a>
+      </div>
+      <div class="paper-grid" id="featuredPapers"></div>
+    </div>
+
+    <div class="wrap section">
+      <div class="story">
+        <div class="story__photo">
+          <figure class="torn torn--desk">
+            <div class="torn__back"></div>
+            <div class="torn__photo"></div>
+          </figure>
+        </div>
+        <div>
+          <p class="eyebrow">03 / How the archive works</p>
+          <h2 class="section__title">Filed, found,<br>and practised.</h2>
+          <div class="story__steps" style="margin-top:26px">
+            <div class="step"><div class="step__num">01</div><div><h4>Find your paper</h4><p>Filter by exam, year, subject and document type — or just search for a title.</p></div></div>
+            <div class="step"><div class="step__num">02</div><div><h4>Open the official file</h4><p>Every card links to an official or verified source PDF, ZIP bundle or archive page.</p></div></div>
+            <div class="step"><div class="step__num">03</div><div><h4>Keep your place</h4><p>Save papers to your desk, mark them solved, and try a practice question. Everything is remembered on this device.</p></div></div>
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px">
+            <a class="btn" href="#papers">Start browsing →</a>
+            <a class="btn btn--outline" href="#practice">Try a question</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="wrap section">
+      <div class="section__head"><div><p class="eyebrow">04 / Shortcuts</p><h2 class="section__title">Where to?</h2></div></div>
+      <div class="featured-row">
+        <button class="feature-tile" data-go="papers" data-exam="cbse-12">
+          <div class="feature-tile__bg" style="background-image:var(--img-desk)"></div>
+          <h3>Board papers</h3><p>CBSE XII &amp; ISC XII →</p>
+        </button>
+        <button class="feature-tile" data-go="papers" data-exam="jee-advanced">
+          <div class="feature-tile__bg" style="background-image:var(--img-cinema)"></div>
+          <h3>Entrance papers</h3><p>JEE Main · Advanced · NEET →</p>
+        </button>
+        <button class="feature-tile" data-go="connect">
+          <div class="feature-tile__bg" style="background-image:var(--img-street)"></div>
+          <h3>The database</h3><p>seed_data.sql + live API →</p>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ EXAMS ============ -->
+  <section class="view" id="view-exams" data-view="exams" hidden>
+    <div class="wrap section" style="padding-top:44px">
+      <p class="eyebrow">The collection / Exam shelves</p>
+      <h2 class="section__title">Five examinations.<br>One archive.</h2>
+      <p class="section__sub">ISC Class 12, CBSE Class 12, JEE Main, JEE Advanced and NEET UG. Two extra Class 10 shelves from the repository database are filed at the bottom.</p>
+      <div class="rule"></div>
+      <div class="exam-grid" id="examShelf"></div>
+      <div class="section" style="padding-top:52px">
+        <p class="eyebrow">Also in the repository database</p>
+        <div class="exam-grid" id="extraShelf"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PAPERS ============ -->
+  <section class="view" id="view-papers" data-view="papers" hidden>
+    <div class="wrap section" style="padding-top:44px">
+      <div class="section__head">
+        <div>
+          <p class="eyebrow">The collection / Browse</p>
+          <h2 class="section__title">Question papers</h2>
+          <p class="section__sub">Filter the shelf. Open any card for the full record, or jump straight to the official file.</p>
+        </div>
+        <button class="btn btn--outline" id="surpriseBtn">Surprise me ↗</button>
+      </div>
+
+      <div class="toolbar">
+        <div class="toolbar__row">
+          <div class="search-wrap">
+            <label class="field" style="display:block">
+              <span style="font:500 9px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--muted)">Search the archive</span>
+              <input class="input" id="searchInput" type="search" placeholder="Title, subject, year, source…" autocomplete="off" style="margin-top:6px">
+            </label>
+          </div>
+          <div class="field"><label for="filterExam">Examination</label><select class="select" id="filterExam"></select></div>
+          <div class="field"><label for="filterYear">Year</label><select class="select" id="filterYear"></select></div>
+          <div class="field"><label for="filterSubject">Subject</label><select class="select" id="filterSubject"></select></div>
+          <div class="field"><label for="filterType">Document</label><select class="select" id="filterType"></select></div>
+          <div class="field"><label for="filterSort">Sort by</label><select class="select" id="filterSort">
+            <option value="newest">Newest first</option>
+            <option value="oldest">Oldest first</option>
+            <option value="title">Title A–Z</option>
+            <option value="popular">Most viewed</option>
+          </select></div>
+        </div>
+        <div class="chips" id="examChips"></div>
+        <div class="chips" style="border-top:0;padding-top:0;margin-top:10px">
+          <button class="chip" id="savedOnly">☆ Saved only</button>
+          <button class="chip" id="solvedOnly">✓ Solved only</button>
+          <button class="chip" id="pdfOnly">▣ Direct files only</button>
+          <button class="chip" id="resetFilters">↺ Reset all</button>
+        </div>
+      </div>
+
+      <div class="results-bar">
+        <p id="resultsCount">—</p>
+        <p id="activeFilterText" class="muted"></p>
+      </div>
+      <div class="paper-grid" id="paperGrid"></div>
+      <div class="pager" id="pager"></div>
+    </div>
+  </section>
+
+  <!-- ============ PRACTICE ============ -->
+  <section class="view" id="view-practice" data-view="practice" hidden>
+    <div class="wrap section" style="padding-top:44px">
+      <p class="eyebrow">The reading room / Practice</p>
+      <h2 class="section__title">Try a question.</h2>
+      <p class="section__sub">Two questions come straight from the repository's <code>mock_tests</code> table; the rest are an illustrative practice set (clearly labelled, not official papers).</p>
+      <div class="rule"></div>
+      <div class="quiz-layout">
+        <aside class="quiz-side">
+          <h3>Set up</h3>
+          <div class="field"><label for="quizExam">Examination</label><select class="select" id="quizExam"></select></div>
+          <div class="field"><label for="quizSubject">Subject</label><select class="select" id="quizSubject"></select></div>
+          <button class="btn btn--outline btn--block btn--sm" id="quizRestart" style="margin-top:6px">↺ Restart set</button>
+          <div class="quiz-score">Score <b id="quizScore">0 / 0</b><span id="quizProgress">Question 1 of 1</span></div>
+          <p class="small muted" style="margin-top:14px">Answers are checked instantly. Your score resets when you change the set.</p>
+        </aside>
+        <div class="quiz-card" id="quizCard"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ DASHBOARD ============ -->
+  <section class="view" id="view-dashboard" data-view="dashboard" hidden>
+    <div class="wrap section" style="padding-top:44px">
+      <p class="eyebrow">Your desk / Progress</p>
+      <h2 class="section__title">My study desk.</h2>
+      <p class="section__sub">Saved papers, solved papers and the files you opened recently. Stored locally in this browser.</p>
+      <div class="rule"></div>
+      <div class="dash-grid" id="dashStats"></div>
+      <div class="dash-cols">
+        <div class="panel">
+          <h3>Coverage by exam</h3>
+          <div id="dashProgress"></div>
+          <button class="btn btn--outline btn--sm" id="dashClear" style="margin-top:18px">Clear my data</button>
+        </div>
+        <div class="panel">
+          <h3>Saved &amp; solved</h3>
+          <div id="dashSaved"></div>
+        </div>
+      </div>
+      <div class="dash-cols">
+        <div class="panel"><h3>Recently opened</h3><div id="dashRecent"></div></div>
+        <div class="panel"><h3>Study notes</h3>
+          <div class="field"><label for="noteInput">A note to your future self</label><textarea class="input" id="noteInput" rows="5" placeholder="e.g. Revise electrostatics before attempting the 2024 paper…"></textarea></div>
+          <button class="btn btn--sm" id="noteSave" style="margin-top:12px">Save note</button>
+          <p class="form-msg" id="noteMsg"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CONNECT / DATABASE ============ -->
+  <section class="view" id="view-connect" data-view="connect" hidden>
+    <div class="wrap section" style="padding-top:44px">
+      <p class="eyebrow">Behind the counter / Database</p>
+      <h2 class="section__title">Where the papers<br>come from.</h2>
+      <p class="section__sub">This site ships with the repository's database bundled as JSON, so it works offline. You can also connect the live FastAPI backend.</p>
+      <div class="rule"></div>
+      <div class="connect-grid">
+        <div class="panel">
+          <h3>01 / Bundled database</h3>
+          <p class="small">Every row of <code>seed_data.sql</code> from <b>edusphere-backend</b> (commit <code>9607a80</code>) was converted into JSON and embedded in this page. Additional curated entries point to verified official question-paper archives.</p>
+          <div class="code-block" id="dbSummary"></div>
+          <table class="data-table" id="dbTable"></table>
+          <p class="small muted" style="margin-top:14px">Source repository: <a href="https://github.com/Akash0747/edusphere-website" target="_blank" rel="noopener" style="text-decoration:underline">github.com/Akash0747/edusphere-website</a></p>
+        </div>
+        <div class="panel">
+          <h3>02 / Live backend</h3>
+          <p class="small">Point the archive at your FastAPI service. When connected, papers from <code>/api/papers</code> are merged into the shelf.</p>
+          <div class="form-grid">
+            <div class="field"><label for="apiBase">API base URL</label><input class="input" id="apiBase" placeholder="http://127.0.0.1:8000" autocomplete="off"></div>
+            <div style="display:flex;gap:9px;flex-wrap:wrap">
+              <button class="btn btn--sm" id="apiConnect">Connect &amp; sync</button>
+              <button class="btn btn--outline btn--sm" id="apiDisconnect">Use bundled data</button>
+            </div>
+            <div class="status" id="apiStatus"><span class="status__dot"></span><span>Offline — bundled database</span></div>
+          </div>
+          <div class="rule"></div>
+          <h3 style="font-size:20px">03 / Admin sign-in</h3>
+          <form class="form-grid" id="adminLoginForm" style="margin-top:12px">
+            <div class="field"><label for="adminEmail">Email</label><input class="input" id="adminEmail" type="email" placeholder="admin@example.com" autocomplete="username"></div>
+            <div class="field"><label for="adminPassword">Password</label><input class="input" id="adminPassword" type="password" placeholder="••••••••" autocomplete="current-password"></div>
+            <div style="display:flex;gap:9px;flex-wrap:wrap">
+              <button class="btn btn--sm" type="submit">Sign in</button>
+              <button class="btn btn--outline btn--sm" type="button" id="adminLogout">Sign out</button>
+            </div>
+            <p class="form-msg" id="adminMsg"></p>
+          </form>
+          <p class="small muted">Requires a connected backend with the <code>/api/auth/login</code> route and CORS configured for this origin.</p>
+        </div>
+      </div>
+
+      <div class="connect-grid section" style="padding-top:44px">
+        <div class="panel">
+          <h3>04 / Add a paper locally</h3>
+          <p class="small">Add a record to this browser's shelf. With a signed-in backend, the same form posts to <code>/api/admin/papers</code>.</p>
+          <form class="form-grid" id="addPaperForm" style="margin-top:14px">
+            <div class="field"><label for="npExam">Exam slug</label><select class="select" id="npExam"></select></div>
+            <div class="field"><label for="npYear">Year</label><input class="input" id="npYear" type="number" min="1990" max="2100" value="2026"></div>
+            <div class="field"><label for="npSubject">Subject</label><input class="input" id="npSubject" required maxlength="100" placeholder="Physics"></div>
+            <div class="field"><label for="npSession">Session / paper</label><input class="input" id="npSession" maxlength="120" placeholder="Paper 1"></div>
+            <div class="field"><label for="npTitle">Title</label><input class="input" id="npTitle" required minlength="3" maxlength="240" placeholder="e.g. Physics Board Paper 2026"></div>
+            <div class="field"><label for="npDesc">Description</label><textarea class="input" id="npDesc" rows="2" maxlength="2000"></textarea></div>
+            <div class="field"><label for="npUrl">Source URL (http/https)</label><input class="input" id="npUrl" type="url" placeholder="https://…"></div>
+            <div class="field"><label for="npFile">PDF file (optional, backend only)</label><input class="input" id="npFile" type="file" accept="application/pdf"></div>
+            <button class="btn btn--sm" type="submit">Add to the archive</button>
+            <p class="form-msg" id="addMsg"></p>
+          </form>
+        </div>
+        <div class="panel">
+          <h3>05 / Portable data</h3>
+          <p class="small">Export your saved papers, solved marks, notes and locally added papers as JSON, or import them on another device.</p>
+          <div style="display:flex;gap:9px;flex-wrap:wrap;margin:18px 0">
+            <button class="btn btn--sm" id="exportBtn">↓ Export my data</button>
+            <button class="btn btn--outline btn--sm" id="importBtn">↑ Import JSON</button>
+            <input type="file" id="importFile" accept="application/json" hidden>
+          </div>
+          <div class="code-block" id="portablePreview"></div>
+          <p class="small muted" style="margin-top:14px">This is a static site: no accounts, no server-side tracking. Your study data never leaves this browser unless you export it.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap footer__inner">
+    <div>
+      <h3>Edusphere · The Paper Archive</h3>
+      <p>Built for students of ISC XII, CBSE XII, JEE Main, JEE Advanced &amp; NEET UG. Papers remain the property of their respective boards and examining bodies. Always verify against the official source.</p>
+    </div>
+    <div class="footer__badge">Filed with care · 2026<br><span id="footerCount"></span></div>
+  </div>
+</footer>
+
+<div class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle" aria-hidden="true">
+  <div class="drawer__backdrop" id="drawerBackdrop"></div>
+  <div class="drawer__panel" id="drawerPanel"></div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>{{INLINE_DATA}}</script>
+<script>{{INLINE_SCRIPT}}</script>
+</body>
+</html>

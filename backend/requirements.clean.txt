@@ -1,0 +1,15 @@
+# Deduplicated, commented replacement for the repository's requirements.txt.
+# The original lists requests, beautifulsoup4 and psycopg[binary] twice and
+# has no upper bounds; httpx is imported by app.py but never used.
+# Python 3.10+ is required (app.py uses `UploadFile | None`).
+
+fastapi>=0.110,<1.0
+uvicorn[standard]>=0.27,<1.0
+python-multipart>=0.0.9,<1.0          # required for Form()/File() admin endpoints
+pydantic>=2,<3                         # LoginRequest; FastAPI pulls it in anyway
+
+psycopg[binary]>=3.2,<4.0             # PostgreSQL driver
+supabase>=2.0,<3.0                    # Storage client (brings httpx transitively)
+
+requests>=2.31,<3.0                   # discovery scrapers
+beautifulsoup4>=4.12,<5.0            # discovery scrapers

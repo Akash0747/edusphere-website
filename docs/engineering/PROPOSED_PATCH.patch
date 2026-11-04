@@ -1,0 +1,322 @@
+diff --git a/app.py b/app.py
+index a7666b8..f349809 100644
+--- a/app.py
++++ b/app.py
+@@ -1,46 +1,33 @@
+-import httpx
+-from fastapi.responses import StreamingResponse, RedirectResponse
+-from urllib.parse import urlparse
++import hashlib
++import hmac
+ import os
+ import re
++import secrets
+ import time
+ import uuid
+-import hashlib
+-import hmac
+-import secrets
+-import os
+-from urllib.parse import urlparse
+-from fastapi import HTTPException
+-from fastapi.responses import RedirectResponse
+-from cbse_discovery import (
+-    discover_cbse_papers,
+-    sync_cbse_papers
+-)
+-from cbse_sample_discovery import (
+-    discover_sample_papers,
+-    sync_sample_papers
+-)
+-from jee_main_discovery import (
+-    discover_jee_main_papers,
+-    sync_jee_main_papers
+-)
+-from jee_advanced_discovery import (
+-    discover_jee_advanced_papers,
+-    sync_jee_advanced_papers
+-)
+-from neet_discovery import discover_neet_papers, sync_neet_papers
++from contextlib import asynccontextmanager
+ from pathlib import Path
+ from typing import Optional
++from urllib.parse import urlparse
+ 
+ import psycopg
+ from psycopg.rows import dict_row
+ from supabase import create_client
+-from fastapi import FastAPI, Request, Response, HTTPException, UploadFile
+-from fastapi.responses import JSONResponse, RedirectResponse
++from fastapi import FastAPI, File, Form, HTTPException, Request, Response, UploadFile
+ from fastapi.middleware.cors import CORSMiddleware
+-from fastapi import Form, File, UploadFile
++from fastapi.responses import JSONResponse, RedirectResponse
+ from pydantic import BaseModel
+ 
++from cbse_discovery import discover_cbse_papers, sync_cbse_papers
++from cbse_sample_discovery import discover_sample_papers, sync_sample_papers
++from jee_main_discovery import discover_jee_main_papers, sync_jee_main_papers
++from jee_advanced_discovery import (
++    discover_jee_advanced_papers,
++    sync_jee_advanced_papers,
++)
++from neet_discovery import discover_neet_papers, sync_neet_papers
++
++
+ class LoginRequest(BaseModel):
+     email: str
+     password: str
+@@ -61,7 +48,19 @@ SESSION_TTL = 60 * 60 * 24 * 7
+ MAX_PDF_BYTES = 50 * 1024 * 1024
+ _storage = None
+ 
+-app = FastAPI(title="EduSphere Question Paper Archive API", version="2.0.0")
++@asynccontextmanager
++async def lifespan(_: FastAPI):
++    # Bootstrap at startup, not at import time: importing this module for
++    # tests (or via `from app import connect`) no longer needs a live DB.
++    init_db()
++    yield
++
++
++app = FastAPI(
++    title="EduSphere Question Paper Archive API",
++    version="2.0.0",
++    lifespan=lifespan,
++)
+ 
+ cors_env = os.getenv(
+     "CORS_ORIGINS",
+@@ -69,10 +68,19 @@ cors_env = os.getenv(
+ )
+ allowed_origins = [x.strip() for x in cors_env.split(",") if x.strip()]
+ 
++# A wildcard here means ANY Netlify site can make credentialed requests as a
++# signed-in admin. Opt in explicitly for deploy previews instead.
++allow_netlify_previews = (
++    os.getenv("CORS_ALLOW_NETLIFY_PREVIEWS", "").lower() == "true"
++)
++allow_origin_regex = (
++    r"https://.*\.netlify\.app" if allow_netlify_previews else None
++)
++
+ app.add_middleware(
+     CORSMiddleware,
+     allow_origins=allowed_origins,
+-    allow_origin_regex=r"https://.*\.netlify\.app",
++    allow_origin_regex=allow_origin_regex,
+     allow_credentials=True,
+     allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+     allow_headers=["Content-Type", "Authorization"],
+@@ -137,7 +145,6 @@ def save_pdf(upload: UploadFile):
+             file_options={
+                 "content-type": "application/pdf",
+                 "cache-control": "3600",
+-                "upsert": "false",
+             },
+         )
+     except Exception as exc:
+@@ -146,9 +153,12 @@ def save_pdf(upload: UploadFile):
+     return original_name, object_path, len(content)
+ 
+ 
+-def public_pdf_url(object_path: str):
++def public_pdf_url(object_path: str, download_name: Optional[str] = None):
+     try:
+-        return storage().storage.from_(SUPABASE_BUCKET).get_public_url(object_path)
++        options = {"download": download_name} if download_name else None
++        return storage().storage.from_(SUPABASE_BUCKET).get_public_url(
++            object_path, options
++        )
+     except Exception as exc:
+         raise HTTPException(502, f"Could not create PDF link: {str(exc)[:200]}")
+ 
+@@ -225,6 +235,18 @@ def require_admin(request: Request):
+     if not admin or not admin["is_admin"]:
+         raise HTTPException(401, "Admin sign-in required")
+ 
++    # CORS stops other sites from READING responses, but simple form POSTs
++    # still execute. With SameSite=None cookies, check Origin explicitly.
++    # Requests without Origin are non-browser clients (curl, server jobs).
++    origin = request.headers.get("origin")
++    if origin and request.method not in ("GET", "HEAD", "OPTIONS"):
++        origin_ok = origin in allowed_origins or (
++            allow_origin_regex is not None
++            and re.fullmatch(allow_origin_regex, origin) is not None
++        )
++        if not origin_ok:
++            raise HTTPException(403, "Cross-origin admin request rejected")
++
+     return admin
+ 
+ 
+@@ -234,6 +256,10 @@ def init_db():
+     password = os.getenv("ADMIN_PASSWORD", "")
+ 
+     with connect() as db:
++        # Serialize startup across uvicorn workers so parallel boots cannot
++        # both seed the papers table.
++        db.execute("SELECT pg_advisory_xact_lock(9172026)")
++
+         existing = db.execute(
+             "SELECT id FROM admins WHERE email = %s",
+             (email,),
+@@ -369,7 +395,7 @@ def parse_paper_fields(
+ 
+ 
+ # ---------- Startup ----------
+-init_db()
++# init_db() runs from the lifespan handler above (startup), not at import.
+ 
+ 
+ # ---------- Public API ----------
+@@ -542,8 +568,13 @@ def paper_file(paper_id: int, download: int = 0):
+         )
+ 
+     if row["stored_name"] and row["stored_name"] != "EXTERNAL_URL":
++        # Supabase Storage sets Content-Disposition: attachment when the
++        # download query option is present.
++        download_name = (
++            (row["file_name"] or "paper.pdf") if download else None
++        )
+         return RedirectResponse(
+-            public_pdf_url(row["stored_name"]),
++            public_pdf_url(row["stored_name"], download_name),
+             status_code=302,
+         )
+ 
+@@ -555,15 +586,14 @@ def paper_file(paper_id: int, download: int = 0):
+ 
+ @app.get("/api/stats")
+ @app.get("/api/stats/")
+-@app.get("/api/admin/stats")
+-@app.get("/api/admin/stats/")
+ def stats():
+     with connect() as db:
+         rows = db.execute(
+             """SELECT exam, COUNT(*) AS total,
+                SUM(
+                    CASE
+-                       WHEN (stored_name <> '' OR source_url <> '')
++                       WHEN (COALESCE(stored_name, '') <> ''
++                            OR COALESCE(source_url, '') <> '')
+                        THEN 1 ELSE 0
+                    END
+                ) AS "withFile"
+@@ -581,10 +611,15 @@ def stats():
+     ]
+ 
+ 
++@app.get("/api/admin/stats")
++@app.get("/api/admin/stats/")
++def admin_stats(request: Request):
++    require_admin(request)
++    return stats()
++
++
+ @app.get("/api/dashboard")
+ @app.get("/api/dashboard/")
+-@app.get("/api/admin/dashboard")
+-@app.get("/api/admin/dashboard/")
+ def dashboard():
+     with connect() as db:
+         total = db.execute(
+@@ -593,7 +628,8 @@ def dashboard():
+ 
+         with_file = db.execute(
+             """SELECT COUNT(*) AS n FROM papers
+-               WHERE (stored_name <> '' OR source_url <> '')"""
++               WHERE (COALESCE(stored_name, '') <> ''
++                      OR COALESCE(source_url, '') <> '')"""
+         ).fetchone()["n"]
+ 
+         downloads = db.execute(
+@@ -607,6 +643,13 @@ def dashboard():
+     }
+ 
+ 
++@app.get("/api/admin/dashboard")
++@app.get("/api/admin/dashboard/")
++def admin_dashboard(request: Request):
++    require_admin(request)
++    return dashboard()
++
++
+ @app.get("/api/mock-tests")
+ @app.get("/api/mock-tests/")
+ def list_mock_tests(
+@@ -699,6 +742,7 @@ async def update_paper(paper_id: int, request: Request):
+ 
+     old_path = ""
+     replacement_path = ""
++    discarded_upload = ""
+ 
+     with connect() as db:
+         old = db.execute(
+@@ -726,6 +770,8 @@ async def update_paper(paper_id: int, request: Request):
+             replacement_path = stored
+ 
+         if str(form.get("removeFile", "")).lower() == "true":
++            # A file uploaded in this same request must not be orphaned.
++            discarded_upload = replacement_path
+             filename, stored, size = "", "", 0
+             replacement_path = ""
+ 
+@@ -750,6 +796,9 @@ async def update_paper(paper_id: int, request: Request):
+     if old_path and old_path != replacement_path:
+         delete_stored_pdf(old_path)
+ 
++    if discarded_upload:
++        delete_stored_pdf(discarded_upload)
++
+     return result
+ 
+ 
+@@ -864,19 +913,6 @@ async def sample_discovery_test(request: Request):
+             "success": False,
+             "error": str(e)
+         }
+-@app.get("/api/admin/sample-discovery-test")
+-async def sample_discovery_test(request: Request):
+-    require_admin(request)
+-
+-    try:
+-        papers = discover_sample_papers()
+-        return {
+-            "success": True,
+-            "total_found": len(papers),
+-            "sample": papers[:10]
+-        }
+-    except Exception as e:
+-        return {"success": False, "error": str(e)}
+ 
+ 
+ @app.post("/api/admin/sample-papers-sync")
+@@ -984,8 +1020,6 @@ def view_jee_advanced_pdf(paper_id: int):
+     Otherwise uses the official JEE Advanced PDF.
+     """
+ 
+-    from app import connect
+-
+     with connect() as db:
+         with db.cursor() as cur:
+             cur.execute(
+@@ -1063,7 +1097,9 @@ def download_jee_advanced_pdf(paper_id: int):
+ 
+     return view_jee_advanced_pdf(paper_id)
+ @app.get("/api/admin/neet-discovery-test")
+-def neet_discovery_test():
++def neet_discovery_test(request: Request):
++    require_admin(request)
++
+     records = discover_neet_papers()
+ 
+     return {
+@@ -1074,5 +1110,6 @@ def neet_discovery_test():
+ 
+ 
+ @app.post("/api/admin/neet-sync")
+-def neet_sync():
++def neet_sync(request: Request):
++    require_admin(request)
+     return sync_neet_papers()
