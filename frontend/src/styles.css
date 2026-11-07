@@ -84,16 +84,22 @@ img { max-width: 100%; display: block; }
   backdrop-filter: blur(9px);
   border-bottom: 2px solid var(--ink);
 }
-.brand { display: flex; align-items: center; gap: 12px; text-decoration: none; flex-shrink: 0; }
+.brand { display: flex; align-items: center; gap: 11px; text-decoration: none; flex-shrink: 0; }
 .brand__mark {
-  width: 42px; height: 42px; display: grid; place-items: center;
-  background: var(--ink); color: var(--paper);
-  font: 400 25px/1 var(--display); letter-spacing: -.04em;
-  clip-path: var(--tear5); transform: rotate(-5deg);
+  width: 48px; height: 48px; flex: 0 0 48px;
+  display: grid; place-items: center;
+  transform: rotate(-4deg);
+  filter: drop-shadow(2px 3px 0 rgba(23,22,18,.28));
+  transition: transform .28s ease;
 }
+.brand:hover .brand__mark { transform: rotate(3deg) scale(1.06); }
+.brand__seal { display: block; width: 100%; height: 100%; }
 .brand__text { display: flex; flex-direction: column; line-height: 1; }
-.brand__text b { font: 400 22px/1 var(--display); letter-spacing: .04em; }
-.brand__text small { font: 400 9px/1.6 var(--mono); letter-spacing: .22em; color: var(--muted); }
+.brand__text b { font: 400 22px/1 var(--display); letter-spacing: .04em; color: var(--ink); }
+.brand__text small {
+  font: 500 9px/1.6 var(--mono); letter-spacing: .19em;
+  color: #3d382d; margin-top: 3px; white-space: nowrap;
+}
 .nav { display: flex; gap: 4px; margin-left: auto; flex-wrap: wrap; }
 .nav__link {
   border: 0; background: transparent; text-decoration: none;
@@ -179,15 +185,26 @@ h1, h2, h3, h4 { font-family: var(--display); font-weight: 400; letter-spacing: 
 .torn--desk .torn__back { inset: -8px; }
 .torn--desk .torn__photo { inset: 0; background-image: var(--img-desk); }
 
-.hero__type { position: absolute; z-index: 5; left: 25%; top: 21%; width: min(670px, 62%); pointer-events: none; }
+.hero__type { position: absolute; z-index: 5; left: 25%; top: 21%; width: min(670px, 62%); pointer-events: none; isolation: isolate; }
+/* A soft ink wash keeps the wordmark readable over the dark cinema photograph. */
+.hero__type::before {
+  content: ""; position: absolute; z-index: -1; inset: -14% -12% -10% -9%;
+  background: rgba(12,10,8,.44);
+  border-radius: 50%;
+  filter: blur(30px);
+  pointer-events: none;
+}
 .hero__type .eyebrow { color: #ffe4b2; font-size: 11px; text-shadow: 0 1px 5px rgba(0,0,0,.95); }
 .display {
   font-size: clamp(54px, 9.1vw, 132px); line-height: .82; text-transform: uppercase;
-  color: #100f0c; letter-spacing: -.018em;
-  -webkit-text-stroke: 1px rgba(255, 247, 229, .32);
+  color: #fbf4e6; letter-spacing: -.018em;
+  -webkit-text-stroke: 2px #17140f;
   paint-order: stroke fill;
-  text-shadow: 0 2px 0 rgba(255,255,255,.14), 0 10px 28px rgba(0,0,0,.5);
+  text-shadow: 0 3px 0 rgba(20,16,10,.9), 0 12px 30px rgba(0,0,0,.72);
   margin: 0 0 22px;
+}
+@supports not (-webkit-text-stroke: 1px #000) {
+  .display { text-shadow: 2px 0 0 #17140f, -2px 0 0 #17140f, 0 2px 0 #17140f, 0 -2px 0 #17140f, 0 12px 30px rgba(0,0,0,.8); }
 }
 .display span { display: block; }
 .display .display__indent { padding-left: .48em; }
@@ -474,9 +491,9 @@ h1, h2, h3, h4 { font-family: var(--display); font-weight: 400; letter-spacing: 
   }
   .display {
     font-size: clamp(48px, 13.2vw, 90px);
-    color: #f8f2e4;
-    -webkit-text-stroke: 1px rgba(18, 15, 11, .55);
-    text-shadow: 0 4px 18px rgba(0,0,0,.7);
+    color: #fbf4e6;
+    -webkit-text-stroke: 1.6px #17140f;
+    text-shadow: 0 3px 0 rgba(20,16,10,.9), 0 6px 20px rgba(0,0,0,.75);
   }
   .display .display__indent { padding-left: .2em; }
   .hero__sub { max-width: none; font-size: 12px; text-shadow: 0 1px 8px rgba(0,0,0,.95); }
@@ -493,6 +510,19 @@ h1, h2, h3, h4 { font-family: var(--display); font-weight: 400; letter-spacing: 
   .display { font-size: 48px; }
   .exam-grid, .paper-grid { grid-template-columns: 1fr; }
   .btn { padding: 11px 15px; }
+}
+/* ---------- Dark-mode / forced-dark safety ----------
+   This is a fixed light "paper" artwork, not a theme-switching app. These
+   rules keep the wordmark and the small brand line legible when the OS or
+   browser requests dark colours / applies an automatic dark filter. */
+:root { color-scheme: light; }
+@media (prefers-color-scheme: dark) {
+  html, body { background: var(--cream); color: var(--ink); }
+  .topbar { background: #f8f4ea; }
+  .brand__text b { color: #171612; }
+  .brand__text small { color: #3d382d; }
+  .hero__type .display { color: #fbf4e6; -webkit-text-stroke-color: #17140f; }
+  .ticker, .footer, .code-block { background: #171612; color: #f8f4ea; }
 }
 @media (prefers-reduced-motion: reduce) {
   * { animation-duration: .01ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
