@@ -10,6 +10,7 @@ from __future__ import annotations
 import base64
 import json
 from pathlib import Path
+from urllib.parse import quote
 
 ROOT = Path(__file__).parent
 SRC = ROOT / "src"
@@ -43,10 +44,16 @@ inline_data = "window.__ARCHIVE__ = " + data_json + ";"
 
 script = (SRC / "app.js").read_text().replace("</script", "<\\/script")
 
+# The designer seal is inlined (no network request) and reused as the tab favicon.
+logo_svg = (ASSETS / "edusphere-logo.svg").read_text().strip()
+logo_favicon = "data:image/svg+xml," + quote(logo_svg, safe="")
+
 html = (SRC / "index.template.html").read_text()
 html = html.replace("{{HEADSTYLE}}", head_style)
 html = html.replace("{{INLINE_DATA}}", inline_data)
 html = html.replace("{{INLINE_SCRIPT}}", script)
+html = html.replace("{{LOGO}}", logo_svg)
+html = html.replace("{{FAVICON}}", logo_favicon)
 
 out = ROOT / "index.html"
 out.write_text(html)
